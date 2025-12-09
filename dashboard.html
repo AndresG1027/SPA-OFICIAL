@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard integral Spa de Mascotas">
+    <title>Spa de Mascotas | Panel Operativo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="dashboard-body">
+    <!-- Barra superior -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="imagenes/logo_spa_de_mascotas-removebg-preview.png" alt="Spa de Mascotas" class="navbar-logo-img">
+            <div class="navbar-brand-info">
+                <span class="navbar-titulo">Spa de Mascotas</span>
+                <span class="navbar-subtitulo">Mimos y Relax</span>
+            </div>
+        </div>
+        <button class="navbar-toggle" id="btnToggleMenu" aria-expanded="false" aria-controls="navbarTabs" aria-label="Mostrar u ocultar menú">
+            ☰
+        </button>
+        <div class="navbar-tabs" id="navbarTabs">
+            <button class="tab-link activo" data-tab="resumen">Resumen</button>
+            <button class="tab-link" data-tab="agenda">Agenda</button>
+            <button class="tab-link" data-tab="grooming">Grooming</button>
+            <button class="tab-link" data-tab="catalogo">Catálogo</button>
+            <button class="tab-link" data-tab="clientes">Clientes</button>
+            <button class="tab-link" data-tab="reportes">Reportes</button>
+            <button class="tab-link" data-tab="config">Configuración</button>
+        </div>
+        <div class="navbar-usuario">
+            <div class="usuario-detalle">
+                <span id="nombreUsuario">Usuario</span>
+                <small>Recepción</small>
+            </div>
+            <button id="btnCerrarSesion" class="btn-cerrar-sesion">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-contenido">
+        <!-- Hero resumen -->
+        <section class="hero-dashboard" id="hero">
+            <h1>Bienvenido a <span class="texto-dorado">Spa de Mascotas</span></h1>
+            <p>Mimos y Relax para tu mejor amigo</p>
+        </section>
+
+        <!-- PANEL RESUMEN -->
+        <section id="tab-resumen" class="tab-panel activo">
+            <div class="resumen-grid">
+                <article class="widget tarjeta-kpi">
+                    <h3>Citas de hoy</h3>
+                    <p class="kpi-num" id="kpiCitasHoy">0</p>
+                    <span class="kpi-desc" id="kpiCitasTrend">Sin datos</span>
+                </article>
+                <article class="widget tarjeta-kpi">
+                    <h3>Ocupación promedio</h3>
+                    <p class="kpi-num" id="kpiOcupacion">0%</p>
+                    <div class="barra-progreso"><div id="barraOcupacion"></div></div>
+                </article>
+                <article class="widget tarjeta-kpi">
+                    <h3>Ticket estimado</h3>
+                    <p class="kpi-num" id="kpiTicket">$0</p>
+                    <span class="kpi-desc">Servicio + productos</span>
+                </article>
+                <article class="widget tarjeta-kpi">
+                    <h3>Alertas inventario</h3>
+                    <p class="kpi-num" id="kpiAlertas">0</p>
+                    <span class="kpi-desc">Productos por reabastecer</span>
+                </article>
+            </div>
+
+            <div class="resumen-panels">
+                <div class="widget agenda-mini">
+                    <div class="widget-header">
+                        <h3>Citas próximas</h3>
+                        <button class="link-menor" data-tab-target="agenda">Ver agenda</button>
+                    </div>
+                    <ul id="listaMiniAgenda" class="lista-simple"></ul>
+                </div>
+                <div class="widget notificaciones-mini">
+                    <div class="widget-header">
+                        <h3>Notificaciones</h3>
+                        <button class="link-menor" data-tab-target="config">Ver todas</button>
+                    </div>
+                    <ul id="listaNotificaciones" class="lista-simple"></ul>
+                </div>
+                <div class="widget tareas-mini">
+                    <div class="widget-header">
+                        <h3>Checklist diario</h3>
+                    </div>
+                    <ul class="lista-check">
+                        <li><input type="checkbox" id="chk-limpieza"><label for="chk-limpieza">Zona grooming lista</label></li>
+                        <li><input type="checkbox" id="chk-insumos"><label for="chk-insumos">Insumos repuestos</label></li>
+                        <li><input type="checkbox" id="chk-confirmaciones"><label for="chk-confirmaciones">Confirmaciones enviadas</label></li>
+                        <li><input type="checkbox" id="chk-reportes"><label for="chk-reportes">Reportes enviados</label></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL AGENDA -->
+        <section id="tab-agenda" class="tab-panel">
+            <div class="panel-grid panel-agenda">
+                <div class="panel-col">
+                    <div class="widget">
+                        <h2>Agendar nueva cita</h2>
+                        <form id="formAgendar" autocomplete="off">
+                            <div class="campo">
+                                <label for="agendaCliente">Cliente</label>
+                                <select id="agendaCliente" required></select>
+                            </div>
+                            <div class="campo">
+                                <label for="agendaMascota">Mascota</label>
+                                <select id="agendaMascota" required></select>
+                            </div>
+                            <div class="campo">
+                                <label for="agendaServicio">Servicio</label>
+                                <select id="agendaServicio" required></select>
+                            </div>
+                            <div class="campo-grid">
+                                <div class="campo">
+                                    <label for="agendaGroomer">Groomer</label>
+                                    <select id="agendaGroomer" required></select>
+                                </div>
+                                <div class="campo">
+                                    <label for="agendaFecha">Fecha</label>
+                                    <input type="date" id="agendaFecha" required>
+                                </div>
+                            </div>
+                            <div class="campo">
+                                <label>Horarios disponibles</label>
+                                <div id="agendaSlots" class="slots-grid"></div>
+                                <input type="hidden" id="agendaSlot" required>
+                            </div>
+                            <div class="campo">
+                                <label for="agendaNotas">Notas</label>
+                                <textarea id="agendaNotas" rows="2" placeholder="Alergias, preferencias, indicaciones"></textarea>
+                            </div>
+                            <button type="submit" class="btn-principal">Confirmar Cita</button>
+                            <div id="agendaMensaje" class="mensaje" style="display:none;"></div>
+                        </form>
+                    </div>
+
+                    <div class="widget">
+                        <h3>Bloqueos y feriados</h3>
+                        <form id="formBloqueo" class="formulario-mini">
+                            <div class="campo">
+                                <label for="bloqueoGroomer">Groomer</label>
+                                <select id="bloqueoGroomer"></select>
+                            </div>
+                            <div class="campo-grid">
+                                <div class="campo">
+                                    <label for="bloqueoFecha">Fecha</label>
+                                    <input type="date" id="bloqueoFecha">
+                                </div>
+                                <div class="campo">
+                                    <label for="bloqueoMotivo">Motivo</label>
+                                    <input type="text" id="bloqueoMotivo" placeholder="Feriado, mantenimiento...">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-secundario">Agregar bloqueo</button>
+                        </form>
+                        <ul id="listaBloqueos" class="lista-simple"></ul>
+                    </div>
+                </div>
+
+                <div class="panel-col amplio">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <h2>Agenda diaria</h2>
+                            <div class="filtros-inline">
+                                <select id="filtroAgendaGroomer"></select>
+                                <input type="date" id="filtroAgendaFecha">
+                            </div>
+                        </div>
+                        <div id="agendaCalendario" class="agenda-calendario"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <h3>Ocupación semanal</h3>
+                            <select id="filtroSemana"></select>
+                        </div>
+                        <div id="ocupacionSemanal" class="ocupacion-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL GROOMING -->
+        <section id="tab-grooming" class="tab-panel">
+            <div class="widget">
+                <div class="widget-header">
+                    <h2>Servicios del día</h2>
+                    <div class="filtros-inline">
+                        <select id="filtroGroomingEstado">
+                            <option value="pendiente">Pendientes</option>
+                            <option value="en-progreso">En progreso</option>
+                            <option value="completado">Completados</option>
+                            <option value="todos">Todos</option>
+                        </select>
+                        <button class="btn-secundario" id="btnAbrirGaleria">Galería</button>
+                    </div>
+                </div>
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Mascota</th>
+                            <th>Servicio</th>
+                            <th>Groomer</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaGrooming"></tbody>
+                </table>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Historial reciente</h3>
+                    <button class="link-menor" id="btnExportarHistorial">Exportar CSV</button>
+                </div>
+                <div id="historialGrooming" class="historial-grid"></div>
+            </div>
+        </section>
+
+        <!-- PANEL CATÁLOGO -->
+        <section id="tab-catalogo" class="tab-panel">
+            <div class="widget">
+                <div class="widget-header">
+                    <h2>Catálogo de Productos</h2>
+                    <div class="filtros-inline">
+                        <select id="filtroCategoria"></select>
+                        <select id="filtroDisponibilidad">
+                            <option value="todos">Todos</option>
+                            <option value="stock">Con stock</option>
+                            <option value="agotado">Agotado</option>
+                        </select>
+                        <button class="btn-secundario" id="btnNuevoProducto">Nuevo producto</button>
+                    </div>
+                </div>
+                <div id="catalogoProductos" class="productos-grid dinamica"></div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Inventario</h3>
+                    <button class="link-menor" id="btnReabastecer">Registrar compra</button>
+                </div>
+                <table class="tabla tabla-inventario">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Variante</th>
+                            <th>Stock</th>
+                            <th>Mínimo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaInventario"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PANEL CLIENTES -->
+        <section id="tab-clientes" class="tab-panel">
+            <div class="panel-grid">
+                <div class="panel-col">
+                    <div class="widget">
+                        <h2>Registrar cliente & mascota</h2>
+                        <form id="formCliente" autocomplete="off">
+                            <div class="campo">
+                                <label for="clienteNombre">Nombre del cliente</label>
+                                <input id="clienteNombre" type="text" required>
+                            </div>
+                            <div class="campo">
+                                <label for="clienteCorreo">Correo</label>
+                                <input id="clienteCorreo" type="email" required>
+                            </div>
+                            <div class="campo">
+                                <label for="clienteTelefono">Teléfono</label>
+                                <input id="clienteTelefono" type="tel" required>
+                            </div>
+                            <div class="campo">
+                                <label for="clientePreferencias">Preferencias</label>
+                                <textarea id="clientePreferencias" rows="2"></textarea>
+                            </div>
+                            <hr>
+                            <div class="campo">
+                                <label for="mascotaNombre">Mascota</label>
+                                <input id="mascotaNombre" type="text" required>
+                            </div>
+                            <div class="campo-grid">
+                                <div class="campo">
+                                    <label for="mascotaTipo">Especie</label>
+                                    <select id="mascotaTipo">
+                                        <option value="perro">Perro</option>
+                                        <option value="gato">Gato</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="campo">
+                                    <label for="mascotaRaza">Raza/Tamaño</label>
+                                    <input id="mascotaRaza" type="text">
+                                </div>
+                            </div>
+                            <div class="campo-grid">
+                                <div class="campo">
+                                    <label for="mascotaVacunas">Vacunas</label>
+                                    <input id="mascotaVacunas" type="text" placeholder="Completas / pendientes">
+                                </div>
+                                <div class="campo">
+                                    <label for="mascotaAlergias">Alergias</label>
+                                    <input id="mascotaAlergias" type="text">
+                                </div>
+                            </div>
+                            <div class="campo">
+                                <label for="mascotaNotas">Notas</label>
+                                <textarea id="mascotaNotas" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn-principal">Guardar perfil</button>
+                            <div id="mensajeCliente" class="mensaje" style="display:none;"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel-col amplio">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <h2>Clientes</h2>
+                            <div class="filtros-inline">
+                                <input type="search" id="busquedaCliente" placeholder="Buscar cliente o mascota">
+                                <select id="filtroTipoMascota">
+                                    <option value="todos">Todas las mascotas</option>
+                                    <option value="perro">Perros</option>
+                                    <option value="gato">Gatos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="tablaClientes" class="tabla-clientes"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL REPORTES -->
+        <section id="tab-reportes" class="tab-panel">
+            <div class="widget">
+                <div class="widget-header">
+                    <h2>Indicadores</h2>
+                    <div class="filtros-inline">
+                        <input type="date" id="reporteFechaInicio">
+                        <input type="date" id="reporteFechaFin">
+                        <select id="reporteGroomer">
+                            <option value="todos">Todos los groomers</option>
+                        </select>
+                        <button class="btn-secundario" id="btnActualizarReportes">Actualizar</button>
+                    </div>
+                </div>
+                <div class="reportes-grid" id="reportesResumen"></div>
+            </div>
+
+            <div class="panel-grid">
+                <div class="panel-col">
+                    <div class="widget">
+                        <h3>Citas por día</h3>
+                        <div id="reporteCitasDia" class="tabla mini-tabla"></div>
+                    </div>
+                </div>
+                <div class="panel-col">
+                    <div class="widget">
+                        <h3>Top servicios</h3>
+                        <div id="reporteTopServicios" class="lista-ranking"></div>
+                    </div>
+                </div>
+                <div class="panel-col">
+                    <div class="widget">
+                        <h3>Top productos</h3>
+                        <div id="reporteTopProductos" class="lista-ranking"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL CONFIGURACIÓN -->
+        <section id="tab-config" class="tab-panel">
+            <div class="panel-grid">
+                <div class="panel-col">
+                    <div class="widget">
+                        <h2>Groomers & Disponibilidad</h2>
+                        <div id="listaGroomers" class="lista-groomers"></div>
+                    </div>
+                    <div class="widget">
+                        <h3>Notificaciones programadas</h3>
+                        <table class="tabla">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Momento</th>
+                                    <th>Canal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaNotificacionesConfig"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-col amplio">
+                    <div class="widget">
+                        <h2>Registro de facturas</h2>
+                        <table class="tabla">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Concepto</th>
+                                    <th>Monto</th>
+                                    <th>Método</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaFacturas"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="widget">
+                        <h3>Roadmap de implementación</h3>
+                        <ol class="roadmap">
+                            <li><span>Día 1-2:</span> Modelos de Clientes, Mascotas, Servicios, Groomers.</li>
+                            <li><span>Día 3-4:</span> Agenda por turnos con reglas de duración/capacidad.</li>
+                            <li><span>Día 5:</span> Fichas de grooming con checklist.</li>
+                            <li><span>Día 6-7:</span> Catálogo, carrito y WhatsApp.</li>
+                            <li><span>Día 8:</span> Notificaciones y recordatorios.</li>
+                            <li><span>Día 9:</span> Reportes de citas y ocupación.</li>
+                            <li><span>Día 10:</span> Galería de fotos, cierre y pruebas.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Carrito flotante -->
+    <aside class="carrito-flotante" id="carritoFlotante">
+        <button class="carrito-toggle" id="btnToggleCarrito">
+            🛒 <span id="carritoContador">0</span>
+        </button>
+        <div class="carrito-contenido" id="carritoContenido">
+            <h3>Tu Carrito</h3>
+            <div id="carritoItems" class="carrito-items">
+                <p class="carrito-vacio">Tu carrito está vacío</p>
+            </div>
+            <div class="carrito-total">
+                <span>Total:</span>
+                <span id="carritoTotal">$0</span>
+            </div>
+            <div class="carrito-acciones">
+                <button class="btn-principal btn-whatsapp" id="btnEnviarWhatsApp">
+                    📱 Ordenar por WhatsApp
+                </button>
+                <button class="btn-secundario" id="btnGenerarFactura">Registrar pago</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- MODALES -->
+    <div class="modal" id="modalGrooming">
+        <div class="modal-dialog">
+            <button class="modal-close" data-modal-close>&times;</button>
+            <h2>Ficha de Grooming</h2>
+            <form id="formGrooming">
+                <input type="hidden" id="groomingCitaId">
+                <div class="modal-grid">
+                    <div class="campo">
+                        <label for="groomingEstadoIngreso">Estado al ingreso</label>
+                        <textarea id="groomingEstadoIngreso" rows="2" placeholder="Nudos, pulgas, heridas..." required></textarea>
+                    </div>
+                    <div class="campo">
+                        <label for="groomingTemperamento">Temperamento</label>
+                        <select id="groomingTemperamento">
+                            <option value="tranquilo">Tranquilo</option>
+                            <option value="nervioso">Nervioso</option>
+                            <option value="ansioso">Ansioso</option>
+                            <option value="agresivo">Requiere cuidado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Checklist</h3>
+                <div class="checklist-grid">
+                    <label><input type="checkbox" value="Baño" name="groomingChecklist"> Baño</label>
+                    <label><input type="checkbox" value="Corte" name="groomingChecklist"> Corte de pelo</label>
+                    <label><input type="checkbox" value="Uñas" name="groomingChecklist"> Corte de uñas</label>
+                    <label><input type="checkbox" value="Oídos" name="groomingChecklist"> Limpieza oídos</label>
+                    <label><input type="checkbox" value="Glándulas" name="groomingChecklist"> Glándulas</label>
+                    <label><input type="checkbox" value="Perfume" name="groomingChecklist"> Perfume</label>
+                </div>
+
+                <div class="modal-grid">
+                    <div class="campo">
+                        <label for="groomingObservaciones">Observaciones</label>
+                        <textarea id="groomingObservaciones" rows="3"></textarea>
+                    </div>
+                    <div class="campo">
+                        <label for="groomingRecomendaciones">Recomendaciones</label>
+                        <textarea id="groomingRecomendaciones" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-grid">
+                    <div class="campo">
+                        <label for="groomingProxima">Recomendar próxima visita</label>
+                        <input type="date" id="groomingProxima">
+                    </div>
+                    <div class="campo">
+                        <label for="groomingPago">Método de pago</label>
+                        <select id="groomingPago">
+                            <option value="efectivo">Efectivo</option>
+                            <option value="qr">QR</option>
+                            <option value="transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo campo-fotos">
+                    <label>Fotos antes/después</label>
+                    <div class="fotos-grid">
+                        <label class="dropzone">
+                            <input type="file" id="fotoAntes" accept="image/*">
+                            <span>Subir foto antes</span>
+                        </label>
+                        <label class="dropzone">
+                            <input type="file" id="fotoDespues" accept="image/*">
+                            <span>Subir foto después</span>
+                        </label>
+                    </div>
+                    <div id="previewFotos" class="preview-fotos"></div>
+                </div>
+
+                <button type="submit" class="btn-principal">Cerrar servicio</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="modalReprogramar">
+        <div class="modal-dialog">
+            <button class="modal-close" data-modal-close>&times;</button>
+            <h2>Reprogramar cita</h2>
+            <form id="formReprogramar">
+                <input type="hidden" id="reprogramarCitaId">
+                <div class="campo">
+                    <label for="reprogramarFecha">Nueva fecha</label>
+                    <input type="date" id="reprogramarFecha" required>
+                </div>
+                <div class="campo">
+                    <label>Nuevos horarios disponibles</label>
+                    <div id="reprogramarSlots" class="slots-grid"></div>
+                    <input type="hidden" id="reprogramarSlot" required>
+                </div>
+                <button type="submit" class="btn-principal">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="modalFactura">
+        <div class="modal-dialog">
+            <button class="modal-close" data-modal-close>&times;</button>
+            <h2>Registrar pago / Factura</h2>
+            <form id="formFactura">
+                <div class="campo">
+                    <label for="facturaCliente">Cliente</label>
+                    <input type="text" id="facturaCliente" required>
+                </div>
+                <div class="campo">
+                    <label for="facturaConcepto">Concepto</label>
+                    <input type="text" id="facturaConcepto" required>
+                </div>
+                <div class="campo-grid">
+                    <div class="campo">
+                        <label for="facturaMonto">Monto</label>
+                        <input type="number" id="facturaMonto" required min="0" step="0.01">
+                    </div>
+                    <div class="campo">
+                        <label for="facturaMetodo">Método</label>
+                        <select id="facturaMetodo">
+                            <option value="efectivo">Efectivo</option>
+                            <option value="qr">QR</option>
+                            <option value="transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-principal">Guardar factura</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spa de Mascotas - Mimos y Relax">
+    <title>Spa de Mascotas | Iniciar Sesión</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-auth">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="imagenes/logo_spa_de_mascotas-removebg-preview.png" alt="Spa de Mascotas" class="logo-imagen">
+        </div>
+
+        <!-- Formulario Login -->
+        <form id="form-login" class="formulario" autocomplete="off">
+            <div class="grupo-input">
+                <label for="log-correo">Correo Electrónico</label>
+                <input 
+                    type="email" 
+                    id="log-correo" 
+                    placeholder="tu@email.com"
+                    required
+                >
+            </div>
+
+            <div class="grupo-input">
+                <label for="log-pass">Contraseña</label>
+                <div class="input-con-icono">
+                    <input 
+                        type="password" 
+                        id="log-pass" 
+                        placeholder="••••••••"
+                        required
+                    >
+                    <span class="icono-ojo" onclick="mostrarOcultarPass('log-pass')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-principal">
+                Iniciar Sesión
+            </button>
+
+            <!-- Mensaje de error/éxito -->
+            <div id="msg-log" class="mensaje" style="display: none;"></div>
+        </form>
+
+        <!-- Enlaces -->
+        <div class="enlaces-auth">
+            <a href="recuperar.html" class="enlace" id="enlace-recuperar">¿Olvidaste tu contraseña?</a>
+            <div class="separador">
+                <span>¿No tienes cuenta?</span>
+            </div>
+            <a href="registro.html" class="btn-secundario">
+                Crear Cuenta
+            </a>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Conectar formulario con función
+        document.getElementById('form-login').addEventListener('submit', iniciarSesion);
+    </script>
+</body>
+</html>

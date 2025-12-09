@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Recuperar contraseña - Spa de Mascotas">
+    <title>Spa de Mascotas | Recuperar Contraseña</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-auth">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="imagenes/logo_spa_de_mascotas-removebg-preview.png" alt="Spa de Mascotas" class="logo-imagen logo-md">
+            <h2 class="logo-texto">Recuperar Contraseña</h2>
+        </div>
+
+        <!-- Info -->
+        <div class="info-box">
+            <p>Ingresa tu correo y una nueva contraseña para restablecer el acceso a tu cuenta.</p>
+        </div>
+
+        <!-- Formulario Recuperación -->
+        <form id="form-recuperar" class="formulario" autocomplete="off">
+            <div class="grupo-input">
+                <label for="rec-correo">Correo Electrónico</label>
+                <input 
+                    type="email" 
+                    id="rec-correo" 
+                    placeholder="tu@email.com"
+                    required
+                >
+            </div>
+
+            <div class="grupo-input">
+                <label for="rec-pass">Nueva Contraseña</label>
+                <div class="input-con-icono">
+                    <input 
+                        type="password" 
+                        id="rec-pass" 
+                        placeholder="••••••••"
+                        required
+                    >
+                    <span class="icono-ojo" onclick="mostrarOcultarPass('rec-pass')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </span>
+                </div>
+                <span class="input-hint">Mín. 6 caracteres: mayúscula, minúscula, número y símbolo</span>
+            </div>
+
+            <button type="submit" class="btn-principal">
+                Restablecer Contraseña
+            </button>
+
+            <!-- Mensaje de error/éxito -->
+            <div id="msg-rec" class="mensaje" style="display: none;"></div>
+        </form>
+
+        <!-- Enlaces -->
+        <div class="enlaces-auth">
+            <a href="index.html" class="enlace">
+                ← Volver al inicio de sesión
+            </a>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Conectar formulario con función
+        document.getElementById('form-recuperar').addEventListener('submit', recuperarClave);
+    </script>
+</body>
+</html>
